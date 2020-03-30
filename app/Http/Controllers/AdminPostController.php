@@ -53,7 +53,7 @@ class AdminPostController extends Controller
 
         // if the selection process was successful show the selected post
         if (!empty($post)) {
-            return view('guest.posts.show', ["post"=>$post]);
+            return view('admin.posts.show', ["post"=>$post]);
         } else {
             abort('404');
         }
