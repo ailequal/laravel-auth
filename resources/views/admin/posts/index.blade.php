@@ -23,7 +23,7 @@
 					<form class="d-inline-block" action="{{route('admin.posts.destroy', $post->id)}}" method="POST">
 						@csrf
 						@method('DELETE')
-						<button type="button" class="btn btn-danger">Delete</button>
+						<button type="submit" class="btn btn-danger">Delete</button>
 					</form>
 				</div>
 			</div>
