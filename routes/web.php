@@ -21,7 +21,11 @@ Route::get('/', function () {
 // admin
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
-// AdminPostController
+Route::name('admin.')
+    ->prefix('admin')
+    ->group(function () {
+        Route::resource('posts', 'AdminPostController');
+    });
 
 // guest
 Route::get('/guest/posts', 'GuestPostController@index')->name('guest.posts.index');
