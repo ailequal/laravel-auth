@@ -19,7 +19,6 @@ class CreatePostsTable extends Migration
                 ->constrained();
             $table->char('title', 100);
             $table->longText('text');
-            $table->char('author', 100);
             $table->timestamps();
         });
     }
