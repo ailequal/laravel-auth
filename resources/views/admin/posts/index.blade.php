@@ -3,7 +3,7 @@
 @section('content')
 <div class="container text-center">
 	<h1>Posts view for Admin</h1>
-	<button type="button" class="btn btn-primary mb-4">Add</button>
+	<a href="{{route('admin.posts.create')}}"><button type="button" class="btn btn-primary mb-4">Add</button></a>
 </div>
 <div class="container">
 	<div class="row justify-content-center">
@@ -15,6 +15,7 @@
 				</a>
 				<div class="card-body">
 					<p>{{$post->text}}</p>
+					<h6 class="text-right">{{$post->user->name}}</h6>
 				</div>
 				<button type="button" class="btn btn-warning">Edit</button>
 				<button type="button" class="btn btn-danger">Delete</button>

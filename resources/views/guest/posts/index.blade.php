@@ -12,6 +12,7 @@
 				</a>
 				<div class="card-body">
 					<p>{{$post->text}}</p>
+					<h6 class="text-right">{{$post->user->name}}</h6>
 				</div>
 			</div>
 			@endforeach

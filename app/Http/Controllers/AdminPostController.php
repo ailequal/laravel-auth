@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Post;
 
 class AdminPostController extends Controller
 {
+    private $postValidation = [
+        'title' => 'required|string|max:100',
+        'text' => 'required|string'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +32,8 @@ class AdminPostController extends Controller
      */
     public function create()
     {
-        //
+        // form for creating a new entry inside the db
+        return view('admin.posts.create');
     }
 
     /**
@@ -37,7 +44,25 @@ class AdminPostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // store all the data passed with post method
+        $data = $request->all();
+
+        // form validation with laravel for the post data
+        $request->validate($this->postValidation);
+
+        // creating a new object to store inside the db
+        $post = new Post();
+        $userId = Auth::user()->id;
+        $post->user_id = $userId;
+        $post->fill($data);
+
+        // if the save process was successful show the new post
+        $save = $post->save();
+        if ($save) {
+            return redirect()->route('admin.posts.show', $post->id);
+        } else {
+            abort('500');
+        }
     }
 
     /**
