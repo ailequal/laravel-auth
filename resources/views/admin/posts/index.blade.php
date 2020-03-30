@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-center">Posts view for Admin</h1>
+<div class="container text-center">
+	<h1>Posts view for Admin</h1>
+	<button type="button" class="btn btn-primary mb-4">Add</button>
+</div>
 <div class="container">
 	<div class="row justify-content-center">
 		<div class="col-md-8">
@@ -13,6 +16,8 @@
 				<div class="card-body">
 					<p>{{$post->text}}</p>
 				</div>
+				<button type="button" class="btn btn-warning">Edit</button>
+				<button type="button" class="btn btn-danger">Delete</button>
 			</div>
 			@endforeach
 		</div>

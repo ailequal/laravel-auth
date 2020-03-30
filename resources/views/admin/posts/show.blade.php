@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-center">Post view for Admin</h1>
+<div class="container text-center">
+	<h1>Post view for Admin</h1>
+</div>
 <div class="container">
 	<div class="row justify-content-center">
 		<div class="col-md-8 mb-4">
