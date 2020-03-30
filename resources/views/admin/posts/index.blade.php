@@ -17,8 +17,15 @@
 					<p>{{$post->text}}</p>
 					<h6 class="text-right">{{$post->user->name}}</h6>
 				</div>
-				<button type="button" class="btn btn-warning">Edit</button>
-				<button type="button" class="btn btn-danger">Delete</button>
+				<div class="container text-center mb-2">
+					<a href="{{route('admin.posts.edit', $post->id)}}"><button type="button"
+							class="btn btn-warning">Edit</button></a>
+					<form class="d-inline-block" action="{{route('admin.posts.destroy', $post->id)}}" method="POST">
+						@csrf
+						@method('DELETE')
+						<button type="button" class="btn btn-danger">Delete</button>
+					</form>
+				</div>
 			</div>
 			@endforeach
 		</div>

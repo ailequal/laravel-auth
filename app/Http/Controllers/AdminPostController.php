@@ -92,7 +92,15 @@ class AdminPostController extends Controller
      */
     public function edit($id)
     {
-        //
+        // call from the db the record matching the given id
+        $post = Post::where('id', $id)->first();
+ 
+        // if the selection process was successful go to edit with selected post
+        if (!empty($post)) {
+            return view('admin.posts.edit', ["post"=>$post]);
+        } else {
+            abort('404');
+        }
     }
 
     /**
@@ -104,7 +112,28 @@ class AdminPostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // store all the data passed with patch method
+        $data = $request->all();
+
+        // form validation with laravel for the patch data
+        $request->validate($this->postValidation);
+        
+        // find post to patch
+        $post = Post::find($id);
+        
+        // retrieve user_id and update post with it
+        $userId = Auth::user()->id;
+        $post->user_id = $userId;
+
+        // if the selection process was successful
+        if (!empty($post)) {
+            // patch the object stored inside the db matching the id
+            $post->update($data);
+            // start the show function from controller
+            return redirect()->route('admin.posts.show', $post->id);
+        } else {
+            abort('404');
+       }
     }
 
     /**
@@ -115,6 +144,10 @@ class AdminPostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // select post matching id from db and delete it
+        Post::find($id)->delete();
+        // requesting all the posts from the db
+        $posts = Post::all();
+        return view('admin.posts.index', ["posts"=>$posts]);
     }
 }
