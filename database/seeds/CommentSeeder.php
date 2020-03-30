@@ -26,7 +26,7 @@ class CommentSeeder extends Seeder
             }
             $comment->name = $faker->firstName() . ' ' . $faker->lastName();
             $comment->email = $faker->email();
-            $post->text = $faker->paragraph($nbSentences = 2, $variableNbSentences = true);
+            $comment->text = $faker->paragraph($nbSentences = 2, $variableNbSentences = true);
             $comment->save();
         }
     }
