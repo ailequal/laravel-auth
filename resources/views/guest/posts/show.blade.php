@@ -1,18 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<h1>Posts</h1>
+<h1 class="text-center">Post view for Guest</h1>
 <div class="container">
 	<div class="row justify-content-center">
 		<div class="col-md-8">
 			<div class="card">
-				<div class="card-header">Post</div>
-
+				<a href="{{route('guest.posts.show', $post)}}">
+					<div class="card-header">{{$post->title}}</div>
+				</a>
 				<div class="card-body">
-					<div class="alert alert-success" role="alert">
-						hello world
-					</div>
-
+					<p>{{$post->text}}</p>
 				</div>
 			</div>
 		</div>

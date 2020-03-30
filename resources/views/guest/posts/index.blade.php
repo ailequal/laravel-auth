@@ -7,7 +7,9 @@
 		<div class="col-md-8">
 			@foreach ($posts as $post)
 			<div class="card">
-				<div class="card-header">{{$post->title}}</div>
+				<a href="{{route('guest.posts.show', $post)}}">
+					<div class="card-header">{{$post->title}}</div>
+				</a>
 				<div class="card-body">
 					<p>{{$post->text}}</p>
 				</div>
