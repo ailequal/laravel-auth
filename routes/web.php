@@ -25,3 +25,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // guest
 Route::get('/guest/posts', 'GuestPostController@index')->name('guest.posts.index');
+Route::get('/guest/posts/post/{slug}', 'GuestPostController@show')->name('guest.posts.show');
