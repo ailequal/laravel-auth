@@ -13,10 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// welcome
 Route::get('/', function () {
     return view('welcome');
 });
 
+// admin
 Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
+// AdminPostController
+
+// guest
+Route::get('/guest/posts', 'GuestPostController@index')->name('guest.posts.index');
