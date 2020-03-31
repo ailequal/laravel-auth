@@ -20,8 +20,8 @@ class AdminPostController extends Controller
      */
     public function index()
     {
-        // requesting all the posts from the db
-        $posts = Post::all();
+        // requesting all the posts from the db matching the user_id
+        $posts = Post::where('user_id', Auth::id())->get();
         return view('admin.posts.index', ["posts"=>$posts]);
     }
 
@@ -76,6 +76,11 @@ class AdminPostController extends Controller
         // call from the db the record matching the given id
         $post = Post::where('id', $id)->first();
 
+        // check if user has post_id
+        if (Auth::id() !== $post->user_id) {
+            abort('500');
+        }
+
         // if the selection process was successful show the selected post
         if (!empty($post)) {
             return view('admin.posts.show', ["post"=>$post]);
@@ -94,7 +99,12 @@ class AdminPostController extends Controller
     {
         // call from the db the record matching the given id
         $post = Post::where('id', $id)->first();
- 
+
+        // check if user has post_id
+        if (Auth::id() !== $post->user_id) {
+            abort('500');
+        }
+
         // if the selection process was successful go to edit with selected post
         if (!empty($post)) {
             return view('admin.posts.edit', ["post"=>$post]);
@@ -144,10 +154,18 @@ class AdminPostController extends Controller
      */
     public function destroy($id)
     {
+        // call from the db the record matching the given id
+        $post = Post::where('id', $id)->first();
+
+        // check if user has post_id
+        if (Auth::id() !== $post->user_id) {
+            abort('500');
+        }
+
         // select post matching id from db and delete it
         Post::find($id)->delete();
-        // requesting all the posts from the db
-        $posts = Post::all();
-        return view('admin.posts.index', ["posts"=>$posts]);
+        
+        // redirect to route index
+        return redirect()->route('admin.posts.index');
     }
 }

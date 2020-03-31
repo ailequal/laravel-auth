@@ -32,5 +32,5 @@ Route::name('admin.')
 
 // guest
 Route::get('/guest/posts', 'GuestPostController@index')->name('guest.posts.index');
-Route::get('/guest/posts/post/{slug}', 'GuestPostController@show')->name('guest.posts.show');
+Route::get('/guest/posts/{slug}', 'GuestPostController@show')->name('guest.posts.show');
 Route::post('/guest/comments', 'GuestCommentController@store')->name('guest.comments.store');
