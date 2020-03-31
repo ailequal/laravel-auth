@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-center">Posts view for Guest</h1>
+<div class="container text-center">
+	<h1>Posts view for Guest</h1>
+</div>
 <div class="container">
 	<div class="row justify-content-center">
 		<div class="col-md-8">
