@@ -10,7 +10,7 @@
 		<div class="col-md-8">
 			@foreach ($posts as $post)
 			<div class="card mb-4">
-				<a href="{{route('admin.posts.show', $post)}}">
+				<a href="{{route('admin.posts.show', $post->slug)}}">
 					<div class="card-header">{{$post->title}}</div>
 				</a>
 				<div class="card-body">
@@ -18,9 +18,9 @@
 					<h6 class="text-right">{{$post->user->name}}</h6>
 				</div>
 				<div class="container text-center mb-2">
-					<a href="{{route('admin.posts.edit', $post->id)}}"><button type="button"
+					<a href="{{route('admin.posts.edit', $post->slug)}}"><button type="button"
 							class="btn btn-warning">Edit</button></a>
-					<form class="d-inline-block" action="{{route('admin.posts.destroy', $post->id)}}" method="POST">
+					<form class="d-inline-block" action="{{route('admin.posts.destroy', $post->slug)}}" method="POST">
 						@csrf
 						@method('DELETE')
 						<button type="submit" class="btn btn-danger">Delete</button>

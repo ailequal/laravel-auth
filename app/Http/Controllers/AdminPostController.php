@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Post;
 
@@ -55,11 +56,12 @@ class AdminPostController extends Controller
         $userId = Auth::user()->id;
         $post->user_id = $userId;
         $post->fill($data);
+        $post->slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
 
         // if the save process was successful show the new post
         $save = $post->save();
         if ($save) {
-            return redirect()->route('admin.posts.show', $post->id);
+            return redirect()->route('admin.posts.show', $post->slug);
         } else {
             abort('500');
         }
@@ -71,10 +73,10 @@ class AdminPostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        // call from the db the record matching the given id
-        $post = Post::where('id', $id)->first();
+        // call from the db the record matching the given slug
+        $post = Post::where('slug', $slug)->first();
 
         // check if user has post_id
         if (Auth::id() !== $post->user_id) {
@@ -95,10 +97,10 @@ class AdminPostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        // call from the db the record matching the given id
-        $post = Post::where('id', $id)->first();
+        // call from the db the record matching the given slug
+        $post = Post::where('slug', $slug)->first();
 
         // check if user has post_id
         if (Auth::id() !== $post->user_id) {
@@ -124,7 +126,7 @@ class AdminPostController extends Controller
     {
         // store all the data passed with patch method
         $data = $request->all();
-
+        
         // form validation with laravel for the patch data
         $request->validate($this->postValidation);
         
@@ -139,8 +141,13 @@ class AdminPostController extends Controller
         if (!empty($post)) {
             // patch the object stored inside the db matching the id
             $post->update($data);
+            // dd(Str::finish(Str::slug($post->title), '-' . rand(1, 1000)));
+            $slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
+            $post->slug = $slug;
+            $post->update();
+            // dd($post);
             // start the show function from controller
-            return redirect()->route('admin.posts.show', $post->id);
+            return redirect()->route('admin.posts.show', $post->slug);
         } else {
             abort('404');
        }
@@ -152,10 +159,10 @@ class AdminPostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($slug)
     {
-        // call from the db the record matching the given id
-        $post = Post::where('id', $id)->first();
+        // call from the db the record matching the given slug
+        $post = Post::where('slug', $slug)->first();
 
         // check if user has post_id
         if (Auth::id() !== $post->user_id) {
@@ -163,8 +170,8 @@ class AdminPostController extends Controller
         }
 
         // select post matching id from db and delete it
-        Post::find($id)->delete();
-        
+        $post->delete();
+
         // redirect to route index
         return redirect()->route('admin.posts.index');
     }
