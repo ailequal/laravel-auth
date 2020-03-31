@@ -13,10 +13,10 @@ class GuestPostController extends Controller
         return view('guest.posts.index', ["posts"=>$posts]);
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        // call from the db the record matching the given id
-        $post = Post::where('id', $id)->first();
+        // call from the db the record matching the given slug
+        $post = Post::where('slug', $slug)->first();
 
         // if the selection process was successful show the selected post
         if (!empty($post)) {

@@ -8,7 +8,7 @@
 	<div class="row justify-content-center">
 		<div class="col-md-8">
 			<div class="card mb-4">
-				<a href="{{route('guest.posts.show', $post)}}">
+				<a href="{{route('guest.posts.show', $post->slug)}}">
 					<div class="card-header">{{$post->title}}</div>
 				</a>
 				<div class="card-body">
