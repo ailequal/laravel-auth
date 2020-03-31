@@ -10,8 +10,21 @@
 					<div class="card-header">{{$post->title}}</div>
 				</a>
 				<div class="card-body">
-					<p>{{$post->text}}</p>
-					<h6 class="text-right">{{$post->user->name}}</h6>
+					<div class="post">
+						<p>{{$post->text}}</p>
+						<h6 class="text-right">{{$post->user->name}}</h6>
+					</div>
+					<div class="comments">
+						<h6>Comments</h6>
+						@forelse ($post->comments as $comment)
+						<div class="mb-2">
+							<p>{{$comment->text}}</p>
+							<h6 class="text-right">{{$comment->name}}</h6>
+						</div>
+						@empty
+						<p>No comment</p>
+						@endforelse
+					</div>
 				</div>
 			</div>
 		</div>
