@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Post;
+use App\Tag;
 
 class AdminPostController extends Controller
 {
@@ -34,8 +35,11 @@ class AdminPostController extends Controller
      */
     public function create()
     {
+        // requesting all the tags from the db
+        $tags = Tag::all();
+
         // form for creating a new entry inside the db
-        return view('admin.posts.create');
+        return view('admin.posts.create', ["tags"=>$tags]);
     }
 
     /**
@@ -59,8 +63,14 @@ class AdminPostController extends Controller
         $post->fill($data);
         $post->slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
 
-        // if the save process was successful show the new post
+        // save the new post
         $save = $post->save();
+        
+        // save the tags for the post
+        $tags = $data['tags'];
+        $post->tags()->attach($tags);
+
+        // if the save process was successful show the new post
         if ($save) {
             return redirect()->route('admin.posts.show', $post->slug);
         } else {
