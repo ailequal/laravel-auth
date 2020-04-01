@@ -113,6 +113,15 @@ class AdminPostController extends Controller
         // call from the db the record matching the given slug
         $post = Post::where('slug', $slug)->first();
 
+        // requesting all the tags from the db
+        $tags = Tag::all();
+
+        // data value to be passed
+        $data = [
+            'post' => $post,
+            'tags' => $tags
+        ];
+
         // check if user has post_id
         if (Auth::id() !== $post->user_id) {
             abort('500');
@@ -120,7 +129,7 @@ class AdminPostController extends Controller
 
         // if the selection process was successful go to edit with selected post
         if (!empty($post)) {
-            return view('admin.posts.edit', ["post"=>$post]);
+            return view('admin.posts.edit', $data);
         } else {
             abort('404');
         }
@@ -150,6 +159,10 @@ class AdminPostController extends Controller
 
         // if the selection process was successful
         if (!empty($post)) {
+            // save the tags for the post
+            $post->tags()->detach();
+            $tags = $data['tags'];
+            $post->tags()->attach($tags);
             // patch the object stored inside the db matching the id
             $post->update($data);
             // dd(Str::finish(Str::slug($post->title), '-' . rand(1, 1000)));
@@ -175,6 +188,9 @@ class AdminPostController extends Controller
     {
         // call from the db the record matching the given slug
         $post = Post::where('slug', $slug)->first();
+
+        // detach tags from post
+        $post->tags()->detach();
 
         // check if user has post_id
         if (Auth::id() !== $post->user_id) {
