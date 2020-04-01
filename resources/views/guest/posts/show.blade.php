@@ -33,6 +33,24 @@
 	</div>
 </div>
 <div class="container text-center">
+	<h3>Tags</h3>
+</div>
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-md-8">
+			<div class="card mb-4">
+				<div class="card-body">
+					<div>
+						@foreach ($post->tags as $tag)
+						<span>{{$tag->name}}</span>
+						@endforeach
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container text-center">
 	<h3>Add a comment</h3>
 </div>
 <div class="container">
