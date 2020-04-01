@@ -15,6 +15,7 @@ class GuestPostController extends Controller
 
     public function show($slug)
     {
+        dd('hello');
         // call from the db the record matching the given slug
         $post = Post::where('slug', $slug)->first();
 

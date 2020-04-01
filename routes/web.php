@@ -30,8 +30,8 @@ Route::name('admin.')
         // admin.posts
         Route::resource('posts', 'AdminPostController');
         // admin.tags
-        Route::post('/tags/{slug}/edit', 'AdminTagController@edit')->name('tags.edit');
-        Route::post('/tags/{slug}', 'AdminTagController@update')->name('tags.update');
+        // Route::post('/tags', 'AdminTagController@store')->name('tags.store');
+        // Route::post('/tags/{slug}', 'AdminTagController@update')->name('tags.update');
     });
 
 // guest.posts
