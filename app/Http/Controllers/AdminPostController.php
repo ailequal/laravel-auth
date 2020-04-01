@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use App\Post;
 
 class AdminPostController extends Controller
@@ -144,6 +145,7 @@ class AdminPostController extends Controller
             // dd(Str::finish(Str::slug($post->title), '-' . rand(1, 1000)));
             $slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
             $post->slug = $slug;
+            $post->updated_at = Carbon::now();
             $post->update();
             // dd($post);
             // start the show function from controller
