@@ -27,10 +27,15 @@ Route::name('admin.')
     ->prefix('admin')
     ->middleware('auth')
     ->group(function () {
+        // admin.posts
         Route::resource('posts', 'AdminPostController');
+        // admin.tags
+        Route::post('/tags/{slug}/edit', 'AdminTagController@edit')->name('tags.edit');
+        Route::post('/tags/{slug}', 'AdminTagController@update')->name('tags.update');
     });
 
-// guest
+// guest.posts
 Route::get('/guest/posts', 'GuestPostController@index')->name('guest.posts.index');
 Route::get('/guest/posts/{slug}', 'GuestPostController@show')->name('guest.posts.show');
+// guest.comments
 Route::post('/guest/comments', 'GuestCommentController@store')->name('guest.comments.store');
