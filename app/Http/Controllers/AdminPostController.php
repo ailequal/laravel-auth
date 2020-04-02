@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -62,6 +63,10 @@ class AdminPostController extends Controller
         $post->user_id = $userId;
         $post->fill($data);
         $post->slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
+
+        // save the image received
+        $path = Storage::disk('public')->put('images', $data['path_image']);
+        $post->path_image = $path;
 
         // save the new post
         $save = $post->save();
