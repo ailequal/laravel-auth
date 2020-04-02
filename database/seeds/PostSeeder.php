@@ -23,6 +23,7 @@ class PostSeeder extends Seeder
             }
             $post->title = $faker->sentence($nbWords = 3, $variableNbWords = true);
             $post->text = $faker->paragraph($nbSentences = 5, $variableNbSentences = true);
+            $post->path_image = 'https://i.pravatar.cc/150?img=' . rand(1, 30);
             $post->slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
 
             $post->save();

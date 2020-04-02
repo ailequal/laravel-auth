@@ -19,6 +19,7 @@ class CreatePostsTable extends Migration
                 ->constrained();
             $table->char('title', 100);
             $table->longText('text');
+            $table->char('path_image', 100)->nullable();
             $table->char('slug', 100)->unique();
             $table->timestamps();
         });

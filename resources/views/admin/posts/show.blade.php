@@ -13,6 +13,7 @@
 				</a>
 				<div class="card-body">
 					<div class="post">
+						<img src="{{$post->path_image}}" alt="image">
 						<p>{{$post->text}}</p>
 						<h6 class="text-right">{{$post->user->name}}</h6>
 					</div>
