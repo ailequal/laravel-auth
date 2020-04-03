@@ -19,7 +19,6 @@ class CreatePostTagTable extends Migration
                 ->constrained();
             $table->foreignId('tag_id')
                 ->constrained();
-            $table->timestamps();
         });
     }
 
