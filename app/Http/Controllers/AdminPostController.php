@@ -203,7 +203,7 @@ class AdminPostController extends Controller
         }
 
         // delete the image file linked to path_image
-        Storage::delete($post->path_image);
+        Storage::disk('public')->delete($post->path_image);
 
         // select post matching id from db and delete it
         $post->delete();
