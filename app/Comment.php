@@ -9,9 +9,7 @@ class Comment extends Model
     protected $fillable = [
         'name',
         'email',
-        'text',
-        'created_at',
-        'updated_at'
+        'text'
     ];
 
     public function post() {
