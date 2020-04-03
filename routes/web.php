@@ -29,11 +29,9 @@ Route::name('admin.')
     ->group(function () {
         // admin.posts
         Route::resource('posts', 'AdminPostController');
-        // admin.tags
-        // Route::post('/tags', 'AdminTagController@store')->name('tags.store');
-        // Route::post('/tags/{slug}', 'AdminTagController@update')->name('tags.update');
     });
 
+// guest
 // guest.posts
 Route::get('/guest/posts', 'GuestPostController@index')->name('guest.posts.index');
 Route::get('/guest/posts/{slug}', 'GuestPostController@show')->name('guest.posts.show');
