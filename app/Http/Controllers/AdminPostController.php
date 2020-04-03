@@ -202,6 +202,9 @@ class AdminPostController extends Controller
             abort('500');
         }
 
+        // delete the image file linked to path_image
+        Storage::delete($post->path_image);
+
         // select post matching id from db and delete it
         $post->delete();
 
