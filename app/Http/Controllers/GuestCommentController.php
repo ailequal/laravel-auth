@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Post;
 use App\Comment;
 
 class GuestCommentController extends Controller
@@ -26,9 +27,24 @@ class GuestCommentController extends Controller
         $comment = new Comment();
         $comment->fill($data);
 
-        // add the post_id value
+        // post_id value recieved
         $postId = $data['post_id'];
-        $comment->post_id = $postId;
+
+        // retrieve all the posts from the db
+        $posts = Post::all();
+        $find = false;
+        // cycle every post
+        foreach ($posts as $post) {
+            // check that the post_id alredy exist as post
+            if ($post->id == $postId) {
+                // save the post_id
+                $comment->post_id = $postId;
+                $find = true;
+            }
+        }
+        if (!$find) {
+            abort('500');
+        }
  
         // if the save process was successful show the new comment
         $save = $comment->save();
