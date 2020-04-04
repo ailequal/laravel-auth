@@ -101,11 +101,6 @@ class AdminPostController extends Controller
         // call from the db the record matching the given slug
         $post = Post::where('slug', $slug)->first();
 
-        // check if user has post_id
-        if (Auth::id() !== $post->user_id) {
-            abort('500');
-        }
-
         // if the selection process was successful show the selected post
         if (!empty($post)) {
             return view('admin.posts.show', ["post"=>$post]);
