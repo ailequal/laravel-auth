@@ -77,9 +77,21 @@ class AdminPostController extends Controller
 
         // check that the user set some tags
         if (isset($data['tags'])) {
+            $tagsSelect = $data['tags'];
+            // store db tags as an array
+            $tags = Tag::all();
+            $tagsArray = [];
+            foreach ($tags as $key => $tag) {
+                $tagsArray[] = $tag->id;
+            }
+            // check tags
+            foreach ($tagsSelect as $key => $tag) {
+                if (!in_array($tag, $tagsArray)) {
+                    abort('500');
+                }
+            }
             // save the tags for the post
-            $tags = $data['tags'];
-            $post->tags()->attach($tags);
+            $post->tags()->attach($tagsSelect);
         }
 
         // if the save process was successful show the new post
@@ -153,7 +165,7 @@ class AdminPostController extends Controller
     {
         // store all the data passed with patch method
         $data = $request->all();
-        
+
         // form validation with laravel for the patch data
         $request->validate($this->postValidation);
         
