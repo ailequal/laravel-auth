@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
+use App\Post;
 use App\Comment;
 
 class CommentSeeder extends Seeder
@@ -13,21 +14,22 @@ class CommentSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        for ($i=0; $i < 8; $i++) { 
+         // retrieve all posts
+         $posts = Post::all();
+         // variable for post_id
+         $j = 1;
+
+         // cycle every post and create a new comment
+        foreach ($posts as $key => $post) {
+            for ($i=0; $i < rand(1, 3); $i++) {
             $comment = new Comment;
-            if ($i < 2) {
-                $comment->post_id = 1;
-            } elseif ($i < 4) {
-                $comment->post_id = 2;
-            } elseif ($i < 6) {
-                $comment->post_id = 3;
-            } else {
-                $comment->post_id = 4;
-            }
+            $comment->post_id = $j;
             $comment->name = $faker->firstName() . ' ' . $faker->lastName();
             $comment->email = $faker->email();
             $comment->text = $faker->paragraph($nbSentences = 1, $variableNbSentences = true);
             $comment->save();
+            }
+            $j++;
         }
     }
 }

@@ -12,6 +12,7 @@ class TagSeeder extends Seeder
      */
     public function run()
     {
+        // generate all the tags inside an array
         $tags = [
             'Adventure',
             'Sport',
@@ -21,9 +22,11 @@ class TagSeeder extends Seeder
             'Tech',
             'Food',
             'Music',
-            'Book'
+            'Book',
+            'Photography'
         ];
 
+        // cycle every tag inside the array and create an instance of tag
         foreach ($tags as $name) {
             $tag = new Tag;
             $tag->name = $name;
