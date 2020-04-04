@@ -24,9 +24,13 @@ class AdminPostController extends Controller
      */
     public function index()
     {
-        // requesting all the posts from the db matching the user_id
-        $posts = Post::where('user_id', Auth::id())->get();
+        // requesting all the posts from the db
+        $posts = Post::all();
         return view('admin.posts.index', ["posts"=>$posts]);
+
+        // requesting all the posts from the db matching the user_id
+        // $posts = Post::where('user_id', Auth::id())->get();
+        // return view('admin.posts.index', ["posts"=>$posts]);
     }
 
     /**

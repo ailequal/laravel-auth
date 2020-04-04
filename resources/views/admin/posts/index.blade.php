@@ -14,9 +14,13 @@
 					<div class="card-header">{{$post->title}}</div>
 				</a>
 				<div class="card-body">
+					@if (!empty($post->path_image))
+					<img class="mb-2" src="{{asset('storage/' . $post->path_image)}}" alt="post_image" style="width:80px;">
+					@endif
 					<p>{{$post->text}}</p>
 					<h6 class="text-right">{{$post->user->name}}</h6>
 				</div>
+				@if (Auth::id() === $post->user_id)
 				<div class="container text-center mb-2">
 					<a href="{{route('admin.posts.edit', $post->slug)}}"><button type="button"
 							class="btn btn-warning">Edit</button></a>
@@ -26,6 +30,7 @@
 						<button type="submit" class="btn btn-danger">Delete</button>
 					</form>
 				</div>
+				@endif
 			</div>
 			@endforeach
 		</div>
