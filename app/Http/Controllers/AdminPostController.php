@@ -14,7 +14,8 @@ class AdminPostController extends Controller
 {
     private $postValidation = [
         'title' => 'required|string|max:100',
-        'text' => 'required|string'
+        'text' => 'required|string',
+        'path_image' => 'nullable|image'
     ];
 
     /**
@@ -27,10 +28,6 @@ class AdminPostController extends Controller
         // requesting all the posts from the db
         $posts = Post::all();
         return view('admin.posts.index', ["posts"=>$posts]);
-
-        // requesting all the posts from the db matching the user_id
-        // $posts = Post::where('user_id', Auth::id())->get();
-        // return view('admin.posts.index', ["posts"=>$posts]);
     }
 
     /**
@@ -68,16 +65,22 @@ class AdminPostController extends Controller
         $post->fill($data);
         $post->slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
 
-        // save the image received
-        $path = Storage::disk('public')->put('images', $data['path_image']);
-        $post->path_image = $path;
+        // check that the user uploaded an image
+        if (isset($data['path_image'])) {
+            // save the image received
+            $path = Storage::disk('public')->put('images', $data['path_image']);
+            $post->path_image = $path;
+        }
 
         // save the new post
         $save = $post->save();
-        
-        // save the tags for the post
-        $tags = $data['tags'];
-        $post->tags()->attach($tags);
+
+        // check that the user set some tags
+        if (isset($data['tags'])) {
+            // save the tags for the post
+            $tags = $data['tags'];
+            $post->tags()->attach($tags);
+        }
 
         // if the save process was successful show the new post
         if ($save) {
