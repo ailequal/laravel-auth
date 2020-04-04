@@ -176,21 +176,44 @@ class AdminPostController extends Controller
         $userId = Auth::user()->id;
         $post->user_id = $userId;
 
+        // check that the user uploaded an image
+        if (isset($data['path_image'])) {
+            // delete old image stored
+            Storage::disk('public')->delete($post->path_image);
+            // save the image received
+            $path = Storage::disk('public')->put('images', $data['path_image']);
+        }
+
+        // check that the user set some tags
+        if (isset($data['tags'])) {
+            $tagsSelect = $data['tags'];
+            // store db tags as an array
+            $tags = Tag::all();
+            $tagsArray = [];
+            foreach ($tags as $key => $tag) {
+                $tagsArray[] = $tag->id;
+            }
+            // check tags
+            foreach ($tagsSelect as $key => $tag) {
+                if (!in_array($tag, $tagsArray)) {
+                    abort('500');
+                }
+            }
+            // save the tags for the post
+            $post->tags()->sync($tagsSelect);
+        } else {
+            $post->tags()->detach();
+        }
+
         // if the selection process was successful
         if (!empty($post)) {
-            // save the tags for the post
-            $post->tags()->detach();
-            $tags = $data['tags'];
-            $post->tags()->attach($tags);
             // patch the object stored inside the db matching the id
             $post->update($data);
-            // dd(Str::finish(Str::slug($post->title), '-' . rand(1, 1000)));
             $slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
             $post->slug = $slug;
+            $post->path_image = $path;
             $post->updated_at = Carbon::now();
             $post->update();
-            // dd($post);
-            // start the show function from controller
             return redirect()->route('admin.posts.show', $post->slug);
         } else {
             abort('404');
