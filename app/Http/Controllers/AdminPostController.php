@@ -39,6 +39,9 @@ class AdminPostController extends Controller
     {
         // requesting all the tags from the db
         $tags = Tag::all();
+        if (empty($tags)) {
+            abort('500');
+        }
 
         // form for creating a new entry inside the db
         return view('admin.posts.create', ["tags"=>$tags]);
@@ -62,7 +65,9 @@ class AdminPostController extends Controller
         $post = new Post();
         $userId = Auth::user()->id;
         $post->user_id = $userId;
-        $post->fill($data);
+        // $post->fill($data);
+        $post->title = $data['title'];
+        $post->text = $data['text'];
         $post->slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
 
         // check that the user uploaded an image
@@ -98,7 +103,7 @@ class AdminPostController extends Controller
         if ($save) {
             return redirect()->route('admin.posts.show', $post->slug);
         } else {
-            abort('500');
+            return redirect()->back()->withInput();
         }
     }
 

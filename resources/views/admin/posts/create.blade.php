@@ -23,11 +23,11 @@
 						@method('POST')
 						<div class="d-block">
 							<label for="title">Title</label>
-							<input type="text" name="title" placeholder="Title">
+							<input type="text" name="title" placeholder="Title" value="{{old('title')}}">
 						</div>
 						<div class="d-block">
 							<label for="text">Text</label>
-							<input type="text" name="text" placeholder="Insert here your text">
+							<input type="text" name="text" placeholder="Insert here your text" value="{{old('text')}}">
 						</div>
 						<div class="d-block">
 							<input type="file" name="path_image" accept="image/*">
@@ -48,7 +48,7 @@
 						@foreach ($tags as $tag)
 						<div>
 							<span>{{$tag->name}}</span>
-							<input type="checkbox" name="tags[]" value="{{$tag->id}}">
+							<input type="checkbox" name="tags[]" value="{{$tag->id}}" @if(is_array(old('tags')) && in_array($tag->id, old('tags'))) checked @endif>
 						</div>
 						@endforeach
 					</div>
