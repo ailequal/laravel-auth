@@ -45,13 +45,13 @@ class GuestCommentController extends Controller
         if (!$find) {
             abort('500');
         }
- 
+
         // if the save process was successful show the new comment
         $save = $comment->save();
         if ($save) {
             return redirect()->route('guest.posts.show', $comment->post->slug);
         } else {
-            abort('500');
+            return redirect()->back()->withInput();
         }
     }
 }

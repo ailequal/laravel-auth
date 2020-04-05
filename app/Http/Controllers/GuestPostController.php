@@ -17,12 +17,11 @@ class GuestPostController extends Controller
     {
         // call from the db the record matching the given slug
         $post = Post::where('slug', $slug)->first();
-
-        // if the selection process was successful show the selected post
-        if (!empty($post)) {
-            return view('guest.posts.show', ["post"=>$post]);
-        } else {
+        if (empty($post)) {
             abort('404');
         }
+
+        // show the selected post
+        return view('guest.posts.show', ["post"=>$post]);
     }
 }

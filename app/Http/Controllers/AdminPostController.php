@@ -176,14 +176,6 @@ class AdminPostController extends Controller
         $userId = Auth::user()->id;
         $post->user_id = $userId;
 
-        // check that the user uploaded an image
-        if (isset($data['path_image'])) {
-            // delete old image stored
-            Storage::disk('public')->delete($post->path_image);
-            // save the image received
-            $path = Storage::disk('public')->put('images', $data['path_image']);
-        }
-
         // check that the user set some tags
         if (isset($data['tags'])) {
             $tagsSelect = $data['tags'];
@@ -207,11 +199,21 @@ class AdminPostController extends Controller
 
         // if the selection process was successful
         if (!empty($post)) {
+            // if a new image was submitted
+            if (isset($data['path_image'])) {
+                // delete old image stored
+                Storage::disk('public')->delete($post->path_image);
+            }
             // patch the object stored inside the db matching the id
             $post->update($data);
             $slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
             $post->slug = $slug;
-            $post->path_image = $path;
+            // check that the user uploaded an image
+            if (isset($data['path_image'])) {
+                // save the image received
+                $path = Storage::disk('public')->put('images', $data['path_image']);
+                $post->path_image = $path;
+            }
             $post->updated_at = Carbon::now();
             $post->update();
             return redirect()->route('admin.posts.show', $post->slug);

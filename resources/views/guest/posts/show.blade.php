@@ -1,6 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($errors->any())
+<div class="alert alert-danger">
+	<ul>
+		@foreach ($errors->all() as $error)
+		<li>{{ $error }}</li>
+		@endforeach
+	</ul>
+</div>
+@endif
 <div class="container text-center">
 	<h1>Post view for Guest</h1>
 </div>
@@ -78,15 +87,15 @@
 						@method('POST')
 						<div class="d-block">
 							<label for="name">Name</label>
-							<input type="text" name="name" placeholder="Name">
+							<input type="text" name="name" placeholder="Name" value="{{old('name')}}">
 						</div>
 						<div class="d-block">
 							<label for="email">Email</label>
-							<input type="text" name="email" placeholder="Email">
+							<input type="text" name="email" placeholder="Email" value="{{old('email')}}">
 						</div>
 						<div class="d-block">
 							<label for="text">Text</label>
-							<input type="text" name="text" placeholder="Text">
+							<input type="text" name="text" placeholder="Text" value="{{old('text')}}">
 						</div>
 						<input type="submit" value="Submit">
 						<input type="hidden" name="post_id" value="{{$post->id}}">
