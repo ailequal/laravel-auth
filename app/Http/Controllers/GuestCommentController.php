@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Post;
 use App\Comment;
+use App\Mail\CommentStore;
 
 class GuestCommentController extends Controller
 {
@@ -49,6 +51,7 @@ class GuestCommentController extends Controller
         // if the save process was successful show the new comment
         $save = $comment->save();
         if ($save) {
+            Mail::to('contact@email.com')->send(new CommentStore());
             return redirect()->route('guest.posts.show', $comment->post->slug);
         } else {
             return redirect()->back()->withInput();

@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Post;
 use App\Tag;
+use App\Mail\PostStore;
+use App\Mail\PostUpdate;
+use App\Mail\PostDestroy;
 
 class AdminPostController extends Controller
 {
@@ -100,6 +104,7 @@ class AdminPostController extends Controller
 
         // if the save process was successful show the new post
         if ($save) {
+            Mail::to('contact@email.com')->send(new PostStore());
             return redirect()->route('admin.posts.show', $post->slug);
         } else {
             return redirect()->back()->withInput();
@@ -221,6 +226,7 @@ class AdminPostController extends Controller
 
         // if the update process was successful show the edited post
         if ($update) {
+            Mail::to('contact@email.com')->send(new PostUpdate());
             return redirect()->route('admin.posts.show', $post->slug);
         } else {
             return redirect()->back()->withInput();
@@ -257,6 +263,7 @@ class AdminPostController extends Controller
 
         // if the delete process was successful redirect to route index
         if ($delete) {
+            Mail::to('contact@email.com')->send(new PostDestroy());
             return redirect()->route('admin.posts.index');
         } else {
             abort('500');
