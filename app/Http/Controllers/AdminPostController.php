@@ -65,16 +65,15 @@ class AdminPostController extends Controller
         $post = new Post();
         $userId = Auth::user()->id;
         $post->user_id = $userId;
-        // $post->fill($data);
         $post->title = $data['title'];
         $post->text = $data['text'];
         $post->slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
+        // $post->fill($data);
 
         // check that the user uploaded an image
         if (isset($data['path_image'])) {
             // save the image received
-            $path = Storage::disk('public')->put('images', $data['path_image']);
-            $post->path_image = $path;
+            $post->path_image = Storage::disk('public')->put('images', $data['path_image']);
         }
 
         // save the new post
@@ -117,13 +116,12 @@ class AdminPostController extends Controller
     {
         // call from the db the record matching the given slug
         $post = Post::where('slug', $slug)->first();
-
-        // if the selection process was successful show the selected post
-        if (!empty($post)) {
-            return view('admin.posts.show', ["post"=>$post]);
-        } else {
+        if (empty($post)) {
             abort('404');
         }
+
+        // show the selected post
+        return view('admin.posts.show', ["post"=>$post]);
     }
 
     /**
@@ -136,9 +134,15 @@ class AdminPostController extends Controller
     {
         // call from the db the record matching the given slug
         $post = Post::where('slug', $slug)->first();
+        if (empty($post)) {
+            abort('404');
+        }
 
         // requesting all the tags from the db
         $tags = Tag::all();
+        if (empty($tags)) {
+            abort('500');
+        }
 
         // data value to be passed
         $data = [
@@ -151,12 +155,8 @@ class AdminPostController extends Controller
             abort('500');
         }
 
-        // if the selection process was successful go to edit with selected post
-        if (!empty($post)) {
-            return view('admin.posts.edit', $data);
-        } else {
-            abort('404');
-        }
+        // go to edit with selected post
+        return view('admin.posts.edit', $data);
     }
 
     /**
@@ -173,13 +173,30 @@ class AdminPostController extends Controller
 
         // form validation with laravel for the patch data
         $request->validate($this->postValidation);
-        
+
         // find post to patch
         $post = Post::find($id);
-        
-        // retrieve user_id and update post with it
-        $userId = Auth::user()->id;
-        $post->user_id = $userId;
+        if (empty($post)) {
+            abort('404');
+        }
+
+        // update post with new data
+        $post->title = $data['title'];
+        $post->text = $data['text'];
+        $post->slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
+        // $post->fill($data);
+
+        // if a new image was submitted
+        if (isset($data['path_image'])) {
+            // delete old image stored
+            Storage::disk('public')->delete($post->path_image);
+            // save the image received
+            $post->path_image = Storage::disk('public')->put('images', $data['path_image']);
+        }
+
+        // update the edited post
+        $update = $post->update();
+        // $post->updated_at = Carbon::now();
 
         // check that the user set some tags
         if (isset($data['tags'])) {
@@ -202,29 +219,12 @@ class AdminPostController extends Controller
             $post->tags()->detach();
         }
 
-        // if the selection process was successful
-        if (!empty($post)) {
-            // if a new image was submitted
-            if (isset($data['path_image'])) {
-                // delete old image stored
-                Storage::disk('public')->delete($post->path_image);
-            }
-            // patch the object stored inside the db matching the id
-            $post->update($data);
-            $slug = Str::finish(Str::slug($post->title), '-' . rand(1, 1000));
-            $post->slug = $slug;
-            // check that the user uploaded an image
-            if (isset($data['path_image'])) {
-                // save the image received
-                $path = Storage::disk('public')->put('images', $data['path_image']);
-                $post->path_image = $path;
-            }
-            $post->updated_at = Carbon::now();
-            $post->update();
+        // if the update process was successful show the edited post
+        if ($update) {
             return redirect()->route('admin.posts.show', $post->slug);
         } else {
-            abort('404');
-       }
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -237,22 +237,29 @@ class AdminPostController extends Controller
     {
         // call from the db the record matching the given slug
         $post = Post::where('slug', $slug)->first();
-
-        // detach tags from post
-        $post->tags()->detach();
+        if (empty($post)) {
+            abort('404');
+        }
 
         // check if user has post_id
         if (Auth::id() !== $post->user_id) {
             abort('500');
         }
 
+        // detach tags from post
+        $post->tags()->detach();
+
         // delete the image file linked to path_image
         Storage::disk('public')->delete($post->path_image);
 
-        // select post matching id from db and delete it
-        $post->delete();
+        // delete the selected post from the db
+        $delete = $post->delete();
 
-        // redirect to route index
-        return redirect()->route('admin.posts.index');
+        // if the delete process was successful redirect to route index
+        if ($delete) {
+            return redirect()->route('admin.posts.index');
+        } else {
+            abort('500');
+        }
     }
 }
